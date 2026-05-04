@@ -25,6 +25,15 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "ArreglarFecha"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -68,7 +77,30 @@
 				"          email_cliente = trim(email_cliente),",
 				"          metodo_pago = trim(metodo_pago),",
 				"          canal = 'Sucursal') ~> derivedColumn1",
-				"derivedColumn1 derive(sucursal = iif(in(    [\"LPZ\",\"Lapaz\",    \"La Paz\",    \"LA PAZ\",    \"LP\",    \"la paz\",    \"lp\",    \"lapaz\",    \"L.P.\",    \"LaPaz\"    ],sucursal    ),'La Paz',sucursal)) ~> derivedColumn2"
+				"derivedColumn1 derive(sucursal = iif(in(    [\"LPZ\",\"Lapaz\",    \"La Paz\",    \"LA PAZ\",    \"LP\",    \"la paz\",    \"lp\",    \"lapaz\",    \"L.P.\",    \"LaPaz\"    ],sucursal    ),'La Paz',sucursal),",
+				"          cantidad = toInteger(cantidad)) ~> derivedColumn2",
+				"derivedColumn2 derive(fecha = coalesce(\r",
+				"    toDate(fecha,'yyyy-MM-dd'),\r",
+				"    toDate(fecha,'dd-MM-yyyy'),\r",
+				"    toDate(fecha,'dd-MM-yyyy'),\r",
+				"    toDate(fecha,'MM-dd-yyyy'),\r",
+				"    toDate(fecha,'dd-MMM-yyyy'),\r",
+				"    toDate(fecha,'yyyy-dd-MM'),\r",
+				"    toDate(fecha,'MMM-dd-yyyy'),\r",
+				"    toDate(fecha,'yyyy-dd-MMM'),\r",
+				"    \r",
+				"    toDate(fecha,'yyyy/MM/dd'),\r",
+				"    toDate(fecha,'dd/MM/yyyy'),\r",
+				"    toDate(fecha,'dd/MM/yyyy'),\r",
+				"    toDate(fecha,'MM/dd/yyyy'),\r",
+				"    toDate(fecha,'dd/MMM/yyyy'),\r",
+				"    toDate(fecha,'yyyy/dd/MM'),\r",
+				"    toDate(fecha,'MMM/dd/yyyy'),\r",
+				"    toDate(fecha,'yyyy/dd/MMM')\r",
+				")) ~> ArreglarFecha",
+				"ArreglarFecha derive(producto = initCap(regexReplace(producto,'\\\\s+',' ')),",
+				"          precio_unitario = toFloat(regexReplace(toString(precio_unitario), '[^0-9.]',''))) ~> derivedColumn3",
+				"derivedColumn3 filter(cantidad>0&&!isNull(precio_unitario)&&!isNull(fecha)) ~> filter1"
 			]
 		}
 	}
