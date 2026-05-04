@@ -34,6 +34,12 @@
 				},
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "canal"
 				}
 			],
 			"scriptLines": [
@@ -68,7 +74,22 @@
 				",",
 				"          cantidad = toInteger(cantidad)) ~> derivedColumn4",
 				"derivedColumn4 derive(fecha = coalesce(toDate(fecha,'yyyy-MM-dd'),toDate(fecha,'dd-MM-yyyy'),toDate(fecha,'dd-MMM-yyyy'),toDate(fecha,'dd/MM/yyyy'),toDate(fecha,'MM/dd/yyyy'),toDate(fecha,'MM-dd-yyyy'),toDate(fecha,'MMM-dd-yyyy'),toDate(fecha,'MMM/dd/yyyy'),toDate(fecha,'MM-dd-yyyy'),toDate(fecha,'dd-MMM-yyyy'),toDate(fecha,'dd/MMM/yyyy'),toDate(fecha,'yyyy/MM/dd'))) ~> derivedColumn5",
-				"derivedColumn5 filter(cantidad>0&&!isNull(precio_unitario)&&!isNull(fecha)) ~> filter1"
+				"derivedColumn5 filter(cantidad>0&&!isNull(precio_unitario)&&!isNull(fecha)) ~> filter1",
+				"filter1 select(mapColumn(",
+				"          id_venta,",
+				"          fecha,",
+				"          producto,",
+				"          cantidad,",
+				"          precio_unitario,",
+				"          sucursal,",
+				"          vendedor,",
+				"          cliente_nombre,",
+				"          cliente_email,",
+				"          metodo_pago",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(canal = 'Sucursal') ~> canal"
 			]
 		}
 	}
