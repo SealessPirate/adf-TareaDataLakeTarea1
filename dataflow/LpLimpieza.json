@@ -15,7 +15,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SantaCruzVentasLimpio",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "select1"
@@ -100,7 +108,16 @@
 				")) ~> ArreglarFecha",
 				"ArreglarFecha derive(producto = initCap(regexReplace(producto,'\\\\s+',' ')),",
 				"          precio_unitario = toFloat(regexReplace(toString(precio_unitario), '[^0-9.]',''))) ~> derivedColumn3",
-				"derivedColumn3 filter(cantidad>0&&!isNull(precio_unitario)&&!isNull(fecha)) ~> filter1"
+				"derivedColumn3 filter(cantidad>0&&!isNull(precio_unitario)&&!isNull(fecha)) ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['LaPazVentasLimpio'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
