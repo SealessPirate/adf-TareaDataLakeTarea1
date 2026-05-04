@@ -1,0 +1,61 @@
+{
+	"name": "df_Venta_SCZ_B_refsdafasdfS",
+	"properties": {
+		"folder": {
+			"name": "Bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Ventas_Santapue",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_venta as string,",
+				"          fecha as string,",
+				"          producto as string,",
+				"          cantidad as string,",
+				"          precio_unitario as string,",
+				"          sucursal as string,",
+				"          vendedor as string,",
+				"          cliente_nombre as string,",
+				"          cliente_email as string,",
+				"          metodo_pago as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(vendedor = trim(vendedor),",
+				"          cliente_nombre = trim(cliente_nombre),",
+				"          fecha = trim(fecha),",
+				"          producto = trim(producto),",
+				"          cantidad = trim(cantidad),",
+				"          cliente_email = trim(cliente_email),",
+				"          sucursal = trim(sucursal),",
+				"          precio_unitario = trim(precio_unitario),",
+				"          id_venta = trim(id_venta),",
+				"          metodo_pago = trim(metodo_pago)) ~> derivedColumn1",
+				"derivedColumn1 derive(producto = initCap(regexReplace(producto,'\\\\s+',' '))) ~> derivedColumn2",
+				"derivedColumn2 derive(sucursal = iif(in(['SZ','SCZ','Santa Cruz','Sta Cruz','Sta. Cruz','santa cruz','SANTA CRUZ','SC','Santa','SANTA'],sucursal), 'Santa Cruz',sucursal)) ~> derivedColumn3"
+			]
+		}
+	}
+}
