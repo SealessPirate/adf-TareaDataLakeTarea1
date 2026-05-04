@@ -1,5 +1,5 @@
 {
-	"name": "df_Venta_SCZ_B_refsdafasdfS",
+	"name": "dataflow1",
 	"properties": {
 		"folder": {
 			"name": "Bronze"
@@ -25,6 +25,15 @@
 				},
 				{
 					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
+				},
+				{
+					"name": "derivedColumn5"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -54,7 +63,12 @@
 				"          id_venta = trim(id_venta),",
 				"          metodo_pago = trim(metodo_pago)) ~> derivedColumn1",
 				"derivedColumn1 derive(producto = initCap(regexReplace(producto,'\\\\s+',' '))) ~> derivedColumn2",
-				"derivedColumn2 derive(sucursal = iif(in(['SZ','SCZ','Santa Cruz','Sta Cruz','Sta. Cruz','santa cruz','SANTA CRUZ','SC','Santa','SANTA'],sucursal), 'Santa Cruz',sucursal)) ~> derivedColumn3"
+				"derivedColumn2 derive(sucursal = iif(in(['SZ','SCZ','Santa Cruz','Sta Cruz','Sta. Cruz','santa cruz','SANTA CRUZ','SC','Santa','SANTA'],sucursal), 'Santa Cruz',sucursal)) ~> derivedColumn3",
+				"derivedColumn3 derive(precio_unitario = toFloat(regexReplace(toString(precio_unitario), '[^0-9.]',''))\r",
+				",",
+				"          cantidad = toInteger(cantidad)) ~> derivedColumn4",
+				"derivedColumn4 derive(fecha = coalesce(toDate(fecha,'yyyy-MM-dd'),toDate(fecha,'dd-MM-yyyy'),toDate(fecha,'dd-MMM-yyyy'),toDate(fecha,'dd/MM/yyyy'),toDate(fecha,'MM/dd/yyyy'),toDate(fecha,'MM-dd-yyyy'),toDate(fecha,'MMM-dd-yyyy'),toDate(fecha,'MMM/dd/yyyy'),toDate(fecha,'MM-dd-yyyy'),toDate(fecha,'dd-MMM-yyyy'),toDate(fecha,'dd/MMM/yyyy'),toDate(fecha,'yyyy/MM/dd'))) ~> derivedColumn5",
+				"derivedColumn5 filter(cantidad>0&&!isNull(precio_unitario)&&!isNull(fecha)) ~> filter1"
 			]
 		}
 	}
