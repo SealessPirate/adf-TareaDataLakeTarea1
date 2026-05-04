@@ -1,0 +1,68 @@
+{
+	"name": "VentasOnline",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "CapaBronze"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ventas_online.json",
+				"folderPath": "Bronze",
+				"fileSystem": "data-lake-no-me-la"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"order_id": {
+					"type": "string"
+				},
+				"timestamp": {
+					"type": "string"
+				},
+				"product": {
+					"type": "string"
+				},
+				"qty": {
+					"type": "integer"
+				},
+				"unit_price": {
+					"type": "null"
+				},
+				"customer": {
+					"type": "object",
+					"properties": {
+						"name": {
+							"type": "string"
+						},
+						"email": {
+							"type": "string"
+						},
+						"city": {
+							"type": "string"
+						}
+					}
+				},
+				"payment_method": {
+					"type": "string"
+				},
+				"status": {
+					"type": "string"
+				},
+				"shipping_cost": {
+					"type": "number"
+				},
+				"channel": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
