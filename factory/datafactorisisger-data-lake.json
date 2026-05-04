@@ -1,0 +1,15 @@
+{
+	"name": "datafactorisisger-data-lake",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "chilecentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b6a0c01c-f72c-49b4-ad3a-6c000e947281",
+		"tenantId": "cc28633f-12b8-46cb-bc15-951dae239b4d"
+	}
+}
